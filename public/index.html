@@ -122,11 +122,23 @@
             transition: all 0.3s;
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
+        
+        button#copiarPlano {
+            background: var(--cinza-escuro);
+            font-size: 0.9rem;
+            padding: 10px 20px;
+            margin-top: 20px;
+            display: none; /* Começa escondido */
+        }
 
         button:hover {
             background: #0f8a0f;
             transform: translateY(-2px);
             box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+        
+        button#copiarPlano:hover {
+             background: #555;
         }
 
         #resposta {
@@ -135,7 +147,7 @@
             border-radius: 15px;
             margin-top: 30px;
             text-align: left;
-            min-height: 200px;
+            min-height: 100px;
             white-space: pre-wrap;
             font-size: 1.1rem;
             line-height: 1.8;
@@ -147,6 +159,24 @@
             display: block;
             animation: fadeIn 0.5s;
         }
+        
+        /* (Sugestão 9) Estilo do Spinner */
+        .spinner {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--verde-angola);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+            display: none; /* Começa escondido */
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
 
         @keyframes fadeIn {
             from { opacity: 0; }
@@ -252,6 +282,7 @@
             width: 100%;
             height: 100%;
             background: rgba(0,0,0,0.7);
+            animation: fadeIn 0.3s;
         }
 
         .modal-content {
@@ -263,6 +294,22 @@
             max-width: 500px;
             text-align: center;
             box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        /* (Sugestão do utilizador) Botão de fechar a modal */
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #aaa;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .close-modal:hover {
+            color: var(--preto);
         }
 
         .modal input {
@@ -309,7 +356,6 @@
             .input-section { padding: 20px; margin: -20px auto 30px; }
         }
     </style>
-     <script src="https://cdn.jsdelivr.net/npm/fetch-polyfill@3.0.0/dist/fetch.umd.min.js"></script>
 </head>
 <body>
     <div class="hero-image">
@@ -325,7 +371,9 @@
             <p>Ex: "Quero abrir uma barbearia em Viana" ou "Quero uma loja de roupas em Talatona"</p>
             <textarea id="pergunta" placeholder="Digite sua ideia aqui..."></textarea>
             <button onclick="enviarPergunta()">Gerar meu plano agora!</button>
-            <div id="resposta">Sua resposta aparecerá aqui...</div>
+            <div id="loading-spinner" class="spinner"></div>
+            <div id="resposta"></div>
+            <button id="copiarPlano" onclick="copiarTexto()">📋 Copiar Plano</button>
         </div>
 
         <div class="planos-section">
@@ -340,7 +388,7 @@
                         <li>Planilha de fluxo de caixa</li>
                     </ul>
                     <p>⏳ Só 5 vagas por mês!</p>
-                    <a href="#" onclick="abrirModal('avancado')">👉 ACESSAR VERSÃO PREMIUM</a>
+                    <a href="#" onclick="abrirModal('avancado')">👉 Obter Plano Premium 💎</a>
                 </div>
 
                 <div class="plano plano-plus">
@@ -352,7 +400,7 @@
                         <li>Acesso ao Grupo VIP</li>
                     </ul>
                     <p>🎯 Como se eu fosse seu sócio!</p>
-                    <a href="#" onclick="abrirModal('plus')">👉 ACESSAR VERSÃO PREMIUM</a>
+                    <a href="#" onclick="abrirModal('plus')">👉 Obter Plano Premium 💎</a>
                 </div>
 
                 <div class="plano plano-empresarial">
@@ -364,7 +412,7 @@
                         <li>Manual de operações</li>
                     </ul>
                     <p>🏆 Para virar referência em Angola!</p>
-                    <a href="#" onclick="abrirModal('empresarial')">👉 ACESSAR VERSÃO PREMIUM</a>
+                    <a href="#" onclick="abrirModal('empresarial')">👉 Obter Plano Premium 💎</a>
                 </div>
             </div>
         </div>
@@ -372,6 +420,7 @@
 
     <div id="modalPremium" class="modal">
         <div class="modal-content">
+            <span class="close-modal" onclick="fecharModal()">&times;</span>
             <h2>Acesso à Versão Premium</h2>
             <p>Digite a senha que você recebeu após o pagamento:</p>
             <input type="password" id="senhaPremium" placeholder="Digite sua senha">
@@ -389,15 +438,31 @@
         let planoSelecionado = '';
         let gerando = false;
 
+        const modal = document.getElementById('modalPremium');
+
         function abrirModal(plano) {
             planoSelecionado = plano;
-            document.getElementById('modalPremium').style.display = 'block';
+            modal.style.display = 'block';
             document.getElementById('mensagemErro').innerText = '';
             document.getElementById('senhaPremium').value = '';
+        }
+        
+        function fecharModal() {
+            modal.style.display = 'none';
+        }
+
+        // Fecha a modal se clicar fora do conteúdo
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                fecharModal();
+            }
         }
 
         function verificarSenha() {
             const senha = document.getElementById('senhaPremium').value;
+            // ATENÇÃO: Esta validação no frontend é INSEGURA.
+            // A lógica correta requer um backend para validar o acesso.
+            // Mantido apenas para fins de demonstração da interface.
             const senhasValidas = {
                 'avancado': 'senha25k',
                 'plus': 'senha75k',
@@ -422,35 +487,59 @@
 
             const btn = document.querySelector('button[onclick="enviarPergunta()"]');
             const respostaDiv = document.getElementById('resposta');
+            const spinner = document.getElementById('loading-spinner');
+            const btnCopiar = document.getElementById('copiarPlano');
 
             gerando = true;
             btn.disabled = true;
             btn.innerText = "⏳ Gerando...";
-            respostaDiv.innerHTML = "⏳ Gerando seu plano inicial com 4 IAs... Isso pode levar até 30 segundos.";
-            respostaDiv.classList.add('show');
+            spinner.style.display = 'block';
+            respostaDiv.classList.remove('show');
+            respostaDiv.style.display = 'none';
+            btnCopiar.style.display = 'none';
 
             try {
-                const response = await fetch('http://localhost:3000/gerar-plano', {
+                const response = await fetch('https://hook.eu2.make.com/0rl6yh1r4qafs02fndfazr4sz39yirop', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ ideia: pergunta })
                 });
 
-                if (!response.ok) throw new Error("Erro no servidor");
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.erro || "Erro no servidor");
+                }
 
                 const data = await response.json();
                 if (data.resposta) {
-                    respostaDiv.innerHTML = data.resposta;
+                    respostaDiv.innerHTML = data.resposta.replace(/\n/g, '<br>'); // Converte quebras de linha
+                    respostaDiv.style.display = 'block';
+                    respostaDiv.classList.add('show');
+                    btnCopiar.style.display = 'inline-block';
                 } else {
                     respostaDiv.innerHTML = "❌ Desculpe, não consegui gerar seu plano. Tente novamente.";
+                    respostaDiv.style.display = 'block';
                 }
             } catch (error) {
-                respostaDiv.innerHTML = "❌ Servidor temporariamente indisponível. Tente mais tarde.";
+                respostaDiv.innerHTML = `❌ ${error.message || "Servidor temporariamente indisponível. Tente mais tarde."}`;
+                respostaDiv.style.display = 'block';
             } finally {
                 gerando = false;
                 btn.disabled = false;
                 btn.innerText = "Gerar meu plano agora!";
+                spinner.style.display = 'none';
             }
+        }
+
+        function copiarTexto() {
+            const respostaDiv = document.getElementById('resposta');
+            // Usa innerText para preservar a formatação de quebra de linha de forma mais natural
+            navigator.clipboard.writeText(respostaDiv.innerText).then(() => {
+                alert('✅ Plano copiado para a área de transferência!');
+            }).catch(err => {
+                console.error('Erro ao copiar texto: ', err);
+                alert('❌ Falha ao copiar o plano. Tente manualmente.');
+            });
         }
     </script>
 </body>
