@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const fetch = require('node-fetch');
+const path = require('path');
 
 // Carregamos apenas a chave da API da Mistral a partir do .env
 const MISTRAL_API_KEY = process.env.MISTRAL_API_KEY;
@@ -330,10 +331,12 @@ app.post('/gerar-plano', async (req, res) => {
     }
 });
 
-app.use(express.static('public'));
+// LINHA CORRIGIDA E FINAL
+app.use(express.static(path.join(__dirname, 'public')));
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     log(`🚀 Servidor Mandante IA rodando em http://localhost:${PORT}`);
 });
+
 
