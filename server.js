@@ -330,9 +330,10 @@ app.post('/gerar-plano', async (req, res) => {
     }
 });
 
-app.use(express.static('público'));
+app.use(express.static('public'));
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     log(`🚀 Servidor Mandante IA rodando em http://localhost:${PORT}`);
 });
+
