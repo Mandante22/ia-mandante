@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mandante Consultoria IA — Seu Plano de Negócio em 60s</title>
+    <style>
+        :root {
+            --verde-angola: #14B814;
+            --vermelho-angola: #C8102E;
+            --amarelo-angola: #F9D423;
+            --preto: #000;
+            --cinza-claro: #f5f5f5;
+            --cinza-escuro: #333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #fff;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .hero-image {
+            background: url('https://images.pexels.com/photos/4348404/pexels-photo-4348404.jpeg') no-repeat center center;
+            background-size: cover;
+            height: 80vh;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 0;
+        }
+
+        .hero-overlay {
+            position: relative;
+            z-index: 1;
+            color: white;
+            padding: 0 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+        }
+
+        .hero-overlay h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .hero-overlay p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .input-section {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin: -40px auto 50px;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+        }
+
+        .input-section h2 {
+            color: var(--vermelho-angola);
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+
+        textarea {
+            width: 100%;
+            height: 120px;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+            margin: 20px 0;
+            transition: border 0.3s;
+        }
+
+        textarea:focus {
+            border-color: var(--verde-angola);
+            outline: none;
+        }
+
+        button {
+            background: var(--verde-angola);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        button:hover {
+            background: #0f8a0f;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+
+        #resposta {
+            background: var(--cinza-claro);
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 30px;
+            text-align: left;
+            min-height: 200px;
+            white-space: pre-wrap;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            border-left: 5px solid var(--vermelho-angola);
+            display: none;
+        }
+
+        #resposta.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .planos-section {
+            margin: 60px 0;
+            background: white;
+            padding: 40px 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .planos-section h2 {
+            text-align: center;
+            color: var(--preto);
+            font-size: 2rem;
+            margin-bottom: 40px;
+        }
+
+        .planos-grid {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .plano {
+            flex: 1;
+            min-width: 300px;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            background: #fff;
+        }
+
+        .plano:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+
+        .plano-avancado { border-top: 5px solid var(--vermelho-angola); }
+        .plano-plus { border-top: 5px solid var(--preto); }
+        .plano-empresarial { border-top: 5px solid var(--amarelo-angola); }
+
+        .plano h3 {
+            margin: 20px 0 10px;
+            font-size: 1.5rem;
+        }
+
+        .plano .preco {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--vermelho-angola);
+            margin: 10px 0;
+        }
+
+        .plano ul {
+            list-style: none;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .plano ul li {
+            margin: 10px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .plano ul li:before {
+            content: "✓";
+            color: var(--verde-angola);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .plano a {
+            display: block;
+            background: var(--vermelho-angola);
+            color: white;
+            padding: 15px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: background 0.3s;
+        }
+
+        .plano a:hover {
+            background: #a00d24;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+        }
+
+        .modal-content {
+            background: white;
+            margin: 15% auto;
+            padding: 40px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+
+        .modal input {
+            width: 100%;
+            padding: 15px;
+            margin: 20px 0;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+        }
+
+        .modal button {
+            background: var(--vermelho-angola);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .modal button:hover {
+            background: #a00d24;
+        }
+
+        footer {
+            background: var(--preto);
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 60px;
+        }
+
+        footer p {
+            margin: 10px 0;
+        }
+
+        @media (max-width: 768px) {
+            .hero-overlay h1 { font-size: 2rem; }
+            .hero-overlay p { font-size: 1rem; }
+            .container { padding: 20px; }
+            .input-section { padding: 20px; margin: -20px auto 30px; }
+        }
+    </style>
+     <script src="https://cdn.jsdelivr.net/npm/fetch-polyfill@3.0.0/dist/fetch.umd.min.js"></script>
+</head>
+<body>
+    <div class="hero-image">
+        <div class="hero-overlay">
+            <h1>Mandante Consultoria IA</h1>
+            <p>A primeira IA 100% focada no empreendedor angolano. Descreva sua ideia → receba um plano inicial em 60 segundos.</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="input-section">
+            <h2>💡 Descreva sua ideia de negócio</h2>
+            <p>Ex: "Quero abrir uma barbearia em Viana" ou "Quero uma loja de roupas em Talatona"</p>
+            <textarea id="pergunta" placeholder="Digite sua ideia aqui..."></textarea>
+            <button onclick="enviarPergunta()">Gerar meu plano agora!</button>
+            <div id="resposta">Sua resposta aparecerá aqui...</div>
+        </div>
+
+        <div class="planos-section">
+            <h2>💼 Escolha seu plano de consultoria</h2>
+            <div class="planos-grid">
+                <div class="plano plano-avancado">
+                    <h3>💼 Plano Avançado</h3>
+                    <div class="preco">25.000 Kz</div>
+                    <ul>
+                        <li>Plano 100% personalizado</li>
+                        <li>1 consultoria de 2h</li>
+                        <li>Planilha de fluxo de caixa</li>
+                    </ul>
+                    <p>⏳ Só 5 vagas por mês!</p>
+                    <a href="#" onclick="abrirModal('avancado')">👉 ACESSAR VERSÃO PREMIUM</a>
+                </div>
+
+                <div class="plano plano-plus">
+                    <h3>🚀 Plano Plus</h3>
+                    <div class="preco">75.000 Kz</div>
+                    <ul>
+                        <li>Acompanhamento por 3 meses</li>
+                        <li>Consultoria semanal</li>
+                        <li>Acesso ao Grupo VIP</li>
+                    </ul>
+                    <p>🎯 Como se eu fosse seu sócio!</p>
+                    <a href="#" onclick="abrirModal('plus')">👉 ACESSAR VERSÃO PREMIUM</a>
+                </div>
+
+                <div class="plano plano-empresarial">
+                    <h3>🏢 Plano Empresarial</h3>
+                    <div class="preco">300.000 Kz/mês</div>
+                    <ul>
+                        <li>Expansão (filiais, franquia)</li>
+                        <li>Treinamento de equipe</li>
+                        <li>Manual de operações</li>
+                    </ul>
+                    <p>🏆 Para virar referência em Angola!</p>
+                    <a href="#" onclick="abrirModal('empresarial')">👉 ACESSAR VERSÃO PREMIUM</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalPremium" class="modal">
+        <div class="modal-content">
+            <h2>Acesso à Versão Premium</h2>
+            <p>Digite a senha que você recebeu após o pagamento:</p>
+            <input type="password" id="senhaPremium" placeholder="Digite sua senha">
+            <button onclick="verificarSenha()">Entrar</button>
+            <p id="mensagemErro" style="color: red; margin-top: 10px;"></p>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2025 Mandante Consultoria IA — Todos os direitos reservados</p>
+        <p>Desenvolvido para empreendedores angolanos</p>
+    </footer>
+
+    <script>
+        let planoSelecionado = '';
+        let gerando = false;
+
+        function abrirModal(plano) {
+            planoSelecionado = plano;
+            document.getElementById('modalPremium').style.display = 'block';
+            document.getElementById('mensagemErro').innerText = '';
+            document.getElementById('senhaPremium').value = '';
+        }
+
+        function verificarSenha() {
+            const senha = document.getElementById('senhaPremium').value;
+            const senhasValidas = {
+                'avancado': 'senha25k',
+                'plus': 'senha75k',
+                'empresarial': 'senha300k'
+            };
+
+            if (senha === senhasValidas[planoSelecionado]) {
+                window.location.href = `premium.html?plano=${planoSelecionado}`;
+            } else {
+                document.getElementById('mensagemErro').innerText = 'Senha incorreta. Verifique e tente novamente.';
+            }
+        }
+
+        async function enviarPergunta() {
+            if (gerando) return;
+
+            const pergunta = document.getElementById('pergunta').value;
+            if (!pergunta.trim()) {
+                alert("Por favor, digite sua ideia de negócio!");
+                return;
+            }
+
+            const btn = document.querySelector('button[onclick="enviarPergunta()"]');
+            const respostaDiv = document.getElementById('resposta');
+
+            gerando = true;
+            btn.disabled = true;
+            btn.innerText = "⏳ Gerando...";
+            respostaDiv.innerHTML = "⏳ Gerando seu plano inicial com 4 IAs... Isso pode levar até 30 segundos.";
+            respostaDiv.classList.add('show');
+
+            try {
+                const response = await fetch('http://localhost:3000/gerar-plano', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ideia: pergunta })
+                });
+
+                if (!response.ok) throw new Error("Erro no servidor");
+
+                const data = await response.json();
+                if (data.resposta) {
+                    respostaDiv.innerHTML = data.resposta;
+                } else {
+                    respostaDiv.innerHTML = "❌ Desculpe, não consegui gerar seu plano. Tente novamente.";
+                }
+            } catch (error) {
+                respostaDiv.innerHTML = "❌ Servidor temporariamente indisponível. Tente mais tarde.";
+            } finally {
+                gerando = false;
+                btn.disabled = false;
+                btn.innerText = "Gerar meu plano agora!";
+            }
+        }
+    </script>
+</body>
+</html>
