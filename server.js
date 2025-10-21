@@ -4,8 +4,7 @@ const path = require('path');
 
 // --- CONFIGURAÇÃO DA API GEMINI (CHAVE DIRETA) ---
 // MUITO IMPORTANTE: Cole a sua chave de API da Gemini aqui.
-const GEMINI_API_KEY = 'AIzaSyD-F7GGdPqfM43FPklHk6nn7Bio1Xb1huk';
-
+const GEMINI_API_KEY = 
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 let geminiModel;
 if (GEMINI_API_KEY && GEMINI_API_KEY !== 'COLE_A_SUA_API_KEY_DA_GEMINI_AQUI') {
@@ -299,3 +298,4 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     log(`🚀 Servidor Mandante IA (apenas Gemini) rodando em http://localhost:${PORT}`);
 });
+
